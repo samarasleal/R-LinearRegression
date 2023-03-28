@@ -1,0 +1,102 @@
+
+
+
+##############################################################
+# função que retorna a classe, o modo e o tipo de um objeto:
+
+get.info <- function(x)
+{
+	f <- function(x)
+	{
+		out <- c(class(x), mode(x), typeof(x))
+		names(out) <- c("class", "mode", "typeof")
+		return(out)
+	}
+	if(is.data.frame(x)==TRUE)
+	{
+		return(t(sapply(x,f)))
+	}
+	if(is.data.frame(x)==FALSE)
+	{
+		return(f(x))
+	}	
+}
+
+
+
+##############################################################
+# função que armazena medidade de variabilidade em uma lista
+
+summary.var <- function(x)
+{	
+	var <- var(x)
+	dp <- sd(x)
+	cv <- sd(x)/mean(x)
+	out <- c(var, dp, cv)
+	names(out) <-  c("var", "dp", "cv")
+	out
+}
+
+
+##############################################################
+# função  que compara os tipos de histogramas:
+
+show.hists <- function(x)
+{
+	par(mfrow=c(2,1))
+	hist(x, main="prob=FALSE")
+	hist(x, main="prob=TRUE", prob=TRUE)
+}
+
+
+
+##############################################################
+
+my.barplot <- function(x)
+{
+	round(barplot(table(x)),2)
+}
+
+
+##############################################################
+# função que retorna a moda de um conjunto de dados:
+
+my.mode <- function(x)
+{
+	if(typeof(x)=="double")
+	{
+		f <- density(x) 
+		which.max(f$y)  
+		moda <- f$x[which.max(f$y)] 
+	}
+	if(typeof(x)=="integer")
+	{
+		tab <- tabulate(x)
+		moda <- which(tab == max(tab))		
+	}
+	return(moda)
+}
+
+
+##############################################################
+# função que retorna um sumário mais complto dos dados:
+
+sumario <- function(x)
+{
+	summary.var <- function(x)
+	{	
+		var <- var(x)
+		dp <- sd(x)
+		cv <- my.cv(x)
+		out <- c(var, dp, cv)
+		names(out) <-  c("var", "dp", "cv")
+		out
+	}
+	tab1 <- summary(x)
+	tab2 <- summary.var(x)
+	c(tab1,tab2)
+}
+
+
+
+
